@@ -1,0 +1,70 @@
+### Register
+POST http://localhost:4000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Alice",
+  "email": "alice@example.com",
+  "password": "password123"
+}
+
+### Login
+# @name login
+POST http://localhost:4000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@example.com",
+  "password": "password123"
+}
+
+### Me
+GET http://localhost:4000/api/auth/me
+Authorization: Bearer {{login.response.body.token}}
+
+### Create note
+POST http://localhost:4000/api/notes
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+  "title": "First note",
+  "body": "hello",
+  "tags": ["work"],
+  "pinned": false
+}
+
+### List notes
+GET http://localhost:4000/api/notes?q=hello&tag=work&pinned=false&page=1&limit=10
+Authorization: Bearer {{login.response.body.token}}
+
+### Get note (replace id)
+GET http://localhost:4000/api/notes/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{login.response.body.token}}
+
+### Patch note
+PATCH http://localhost:4000/api/notes/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{ "title": "Updated", "pinned": true }
+
+### Delete note
+DELETE http://localhost:4000/api/notes/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{login.response.body.token}}
+
+### Missing token
+GET http://localhost:4000/api/notes
+
+### Garbled token
+GET http://localhost:4000/api/notes
+Authorization: Bearer not.a.real.token
+
+### Validation error
+POST http://localhost:4000/api/auth/register
+Content-Type: application/json
+
+{ "name": "", "email": "bad", "password": "short" }
+
+### Health
+GET http://localhost:4000/api/health
